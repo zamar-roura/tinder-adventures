@@ -1,0 +1,38 @@
+{
+    "matches": [
+        {
+            "seen": {
+                "match_seen": true
+            },
+            "_id": "5ee9403bd526d70100622d945f56b0ff067a0401005c3847",
+            "messages": [],
+            "readreceipt": {
+                "enabled": false
+            }
+        },
+        {
+            "seen": {
+                "match_seen": true,
+                "last_seen_msg_id": "5f5c1bdfea133b01008d9daf"
+            },
+            "_id": "5e6a47ecd75ec001009ddc8a5f56b0ff067a0401005c3847",
+            "messages": [],
+            "readreceipt": {
+                "enabled": false
+            }
+        }
+    ],
+    "blocks": [],
+    "inbox": [],
+    "liked_messages": [],
+    "harassing_messages": [],
+    "lists": [],
+    "goingout": [],
+    "deleted_lists": [],
+    "squads": [],
+    "last_activity_date": "2020-09-13T08:27:45.602Z",
+    "poll_interval": {
+        "standard": 2000,
+        "persistent": 120000
+    }
+}
