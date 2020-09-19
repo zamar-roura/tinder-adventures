@@ -1,8 +1,8 @@
 ## Milestones to obtain.
 
 * Unblur likes (DONE)
-* Get birthday of matches (DONE)
-* Go to profile of likes. 
+* Get birthday of matches (DONE) => NOPE! in swiping-core.json everybody has the same birthday (except for the year) `jq '.data.results[].user.birth_date ' swiping-core.json | sort -n`
+* Go to profile of likes.
 * Get unlimited likes.
 * Obtain ELO of user.
 * Obtain ELO of matches.
