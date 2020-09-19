@@ -2,7 +2,7 @@
 ## Interesting link Links
 
 * https://confluence.gotinder.com (Tinder own wiki)
-* https://arben.sh/bugbounty/ (Bypass SSL APK)
+* https://arben.sh/bugbounty/Configuring-Frida-with-Burp-and-GenyMotion-to-bypass-SSL-Pinning/ (Bypass SSL APK)
 * https://stackoverflow.com/questions/15014519/apk-installation-failed-install-failed-verification-failure (Install rebuild APK)
 
 ## APKS
