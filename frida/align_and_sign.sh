@@ -11,9 +11,10 @@ then
 	printf "Error: directory %s doesn't exist\n" "$1"
 fi
 
-FILE="$1"
+DIR="${1%/}"
 
-apktool-git b "$1" -o "$1_patched.apk" \
-&& zipalign -fp 4 "$1_patched.apk" "$1_patched_aligned.apk" \
-&& apksigner sign --ks 123456.jks --ks-pass pass:123456 "$1_patched_aligned.apk" \
-&& mv -v "$1_patched_aligned.apk" "$1_patched.apk"
+apktool-git b "$DIR" -o "${DIR}_patched.apk" \
+&& zipalign -fp 4 "${DIR}_patched.apk" "${DIR}_patched_aligned.apk" \
+&& apksigner sign --ks "$(dirname "$0")/123456.jks" --ks-pass pass:123456 "${DIR}_patched_aligned.apk" \
+&& mv -v "${DIR}_patched_aligned.apk" "${DIR}_SIGNED.apk" \
+&& rm -fv "${DIR}_patched.apk"
