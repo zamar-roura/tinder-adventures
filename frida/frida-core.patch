@@ -1,0 +1,41 @@
+diff --git a/lib/gadget/gadget.vala b/lib/gadget/gadget.vala
+index 234dcf3a..5d6ea272 100644
+--- a/lib/gadget/gadget.vala
++++ b/lib/gadget/gadget.vala
+@@ -616,6 +616,37 @@ namespace Frida.Gadget {
+                        } else {
+                                config_path = config_path + ".config.so";
+                        }
++
++                       /* The config file may not have been found because it was part of
++                       * an App Bundle with extractNativeLibraries=false. In that case,
++                       * both the gadget and the config file still remain in the .apk */
++                       if ( ! FileUtils.test (config_path, FileTest.EXISTS) ) {
++
++                               /* If it's really an App Bundle, the path of the gadget
++                               * should be something like:
++                               * /data/app/com.ex.ample-[...]/split_[arch].apk!/lib/[arch]/libfrida-gadget.so */
++                               Regex apk_regex;
++                               try {
++                                       apk_regex = new Regex ("(/data/app/[^/]+/split_config\\.[^.]+\\.apk)!/(lib/[^/]+/lib.*\\.so)$");
++                               } catch (RegexError e) {
++                                       return new Config ();
++                               }
++
++                               MatchInfo match_info;
++                               apk_regex.match (config_path, 0, out match_info);
++                               string sdcard_config = "/data/data/com.tinder/files/libgadget.config.json";
++
++                               if ( ( ! FileUtils.test (gadget_path, FileTest.EXISTS))
++                                       && match_info.matches ()
++                                       && FileUtils.test (sdcard_config, FileTest.EXISTS)
++                               ) {
++                                       config_path = sdcard_config;
++
++                               } else {
++                                       /* This is not an App Bundle */
++                                       return new Config ();
++                               }
++                       }
+                }
+ #endif
