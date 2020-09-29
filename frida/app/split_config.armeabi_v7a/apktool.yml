@@ -2,14 +2,13 @@
 apkFileName: split_config.armeabi_v7a.apk
 compressionType: false
 doNotCompress:
-- lib/armeabi-v7a/libRSSupport.so
-- lib/armeabi-v7a/libgpuimage-library.so
-- lib/armeabi-v7a/libopentok.so
-- lib/armeabi-v7a/librsjni.so
-- lib/armeabi-v7a/librsjni_androidx.so
-- lib/armeabi-v7a/libtinteg.so
-- lib/armeabi-v7a/libgadget.so
-- lib/armeabi-v7a/libgadget.config.so
+  - lib/armeabi-v7a/libRSSupport.so
+  - lib/armeabi-v7a/libgpuimage-library.so
+  - lib/armeabi-v7a/libopentok.so
+  - lib/armeabi-v7a/librsjni.so
+  - lib/armeabi-v7a/librsjni_androidx.so
+  - lib/armeabi-v7a/libtinteg.so
+  - lib/armeabi-v7a/libgadget.so
 isFrameworkApk: false
 packageInfo: null
 sdkInfo: null

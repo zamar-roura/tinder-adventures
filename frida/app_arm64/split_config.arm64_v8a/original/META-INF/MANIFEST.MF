@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Built-By: BundleTool
+Created-By: BundleTool
+
+Name: AndroidManifest.xml
+SHA1-Digest: FRATKCfPkDrKimvWzl2dMtxsDEA=
+
+Name: lib/arm64-v8a/libRSSupport.so
+SHA1-Digest: L8j15z5Zxp55e9TL4qvbzIyJwuQ=
+
+Name: lib/arm64-v8a/libgpuimage-library.so
+SHA1-Digest: WdCXQS8rGT+KXmkLkyllPAwDZJM=
+
+Name: lib/arm64-v8a/libopentok.so
+SHA1-Digest: H6IWI6POqEXsSj34GjLh+4PkXGY=
+
+Name: lib/arm64-v8a/librsjni.so
+SHA1-Digest: 2NAphqxvfIsJfdDtUbFYQ9O6xQw=
+
+Name: lib/arm64-v8a/librsjni_androidx.so
+SHA1-Digest: Vq2WMnuoEHBFGslccd9FvhaKSU4=
+
+Name: lib/arm64-v8a/libtinteg.so
+SHA1-Digest: z85Mj2y6A22l0HkE5j3p04HJd4c=
+

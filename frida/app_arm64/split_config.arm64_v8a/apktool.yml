@@ -1,0 +1,25 @@
+!!brut.androlib.meta.MetaInfo
+apkFileName: split_config.arm64_v8a.apk
+compressionType: false
+doNotCompress:
+- lib/arm64-v8a/libRSSupport.so
+- lib/arm64-v8a/libgpuimage-library.so
+- lib/arm64-v8a/libopentok.so
+- lib/arm64-v8a/librsjni.so
+- lib/arm64-v8a/librsjni_androidx.so
+- lib/arm64-v8a/libtinteg.so
+- lib/arm64-v8a/libgadget.so
+isFrameworkApk: false
+packageInfo: null
+sdkInfo: null
+sharedLibrary: false
+sparseResources: false
+unknownFiles: {}
+usesFramework:
+  ids:
+  - 1
+  tag: null
+version: 2.4.1
+versionInfo:
+  versionCode: '11230094'
+  versionName: null

@@ -1,0 +1,26 @@
+Signature-Version: 1.0
+Created-By: 1.0 (Android)
+SHA1-Digest-Manifest: kmaNUIjnQqTpIZaJ1kzLrJxZoqA=
+X-Android-APK-Signed: 2, 3
+
+Name: AndroidManifest.xml
+SHA1-Digest: 8LIXj0T+BDsbcbbMy4arbWEs2pk=
+
+Name: lib/arm64-v8a/libRSSupport.so
+SHA1-Digest: LknF3TFVqSrl71B+bweYKoyx/hk=
+
+Name: lib/arm64-v8a/libgpuimage-library.so
+SHA1-Digest: QvC7o/madCdEaaO12JlaXf+Fpj0=
+
+Name: lib/arm64-v8a/libopentok.so
+SHA1-Digest: bmb5Y70QNlIRRVKU75M3oGFMJaM=
+
+Name: lib/arm64-v8a/librsjni.so
+SHA1-Digest: Oe9vBtgccKuz+swAf0qtsOBuknw=
+
+Name: lib/arm64-v8a/librsjni_androidx.so
+SHA1-Digest: lQ6AuDTDdg6YY8RTBnMgwKmRkYU=
+
+Name: lib/arm64-v8a/libtinteg.so
+SHA1-Digest: xVr3ttfve0/1bjmX9udZMwF0GyI=
+
