@@ -1,6 +1,7 @@
-back# ZAMAR
+# ZAMAR
+
 ## Proxy Interception
-* Registration 
+* Registration
 * Allowed Actions
 * Automated Traffic
 
@@ -8,14 +9,17 @@ back# ZAMAR
 * Match private user_id with public
 
 # MIGUEL
+
 ## Proxy Interception
 * Update Profile
 * Paid Actions
 * Buy
 * Automated traffic
+* Delete account
 
 ## Investigation
-* Automatic inyection on APK
+
+~~* Automatic inyection on APK~~
 
 # Backlog
-* Quitar blur con el bytecode.
+~~* Quitar blur con el bytecode.~~
