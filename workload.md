@@ -4,6 +4,7 @@
 * Registration
 * Allowed Actions
 * Automated Traffic
+~~* Update Profile~~
 
 ## Investigation
 * Match private user_id with public
@@ -11,11 +12,10 @@
 # MIGUEL
 
 ## Proxy Interception
-* Update Profile
-* Paid Actions
+~~* Paid Actions~~
 * Buy
 * Automated traffic
-* Delete account
+~~* Delete account~~
 
 ## Investigation
 
