@@ -1,0 +1,1 @@
+apktool d %CD%\%1.apk -f -r -o %1

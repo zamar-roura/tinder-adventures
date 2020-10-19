@@ -1,0 +1,1 @@
+apktool b %CD%/%1 -o %1_patched.apk  & zipalign -fp 4 %1_patched.apk %1_patched_aligned.apk & apksigner sign --ks %CD%/123456.jks --ks-pass pass:123456 %1_patched_aligned.apk 
