@@ -7,4 +7,4 @@
 * Obtain ELO of user.
 * Obtain ELO of matches.
 * Get Tinder Gold
-* Native libs to true. line 00008960 to 12 FF FF FF FF from 12 00 00 00 00 
+* Native libs to true. line 00008960 (should be 7th occurence of pattern, they're ordered) to 12 FF FF FF FF from 12 00 00 00 00
