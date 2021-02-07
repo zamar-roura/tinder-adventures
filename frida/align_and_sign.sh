@@ -13,8 +13,9 @@ fi
 
 DIR="${1%/}"
 
-apktool-git b "$DIR" -o "${DIR}_patched.apk" \
+apktool b "$DIR" -o "${DIR}_patched.apk" \
 && zipalign -fp 4 "${DIR}_patched.apk" "${DIR}_patched_aligned.apk" \
 && apksigner sign --ks "$(dirname "$0")/123456.jks" --ks-pass pass:123456 "${DIR}_patched_aligned.apk" \
 && mv -v "${DIR}_patched_aligned.apk" "${DIR}_SIGNED.apk" \
-&& rm -fv "${DIR}_patched.apk"
+&& rm -fv "${DIR}_patched.apk" \
+&& rm -fv *.idsig

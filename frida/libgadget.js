@@ -41,3 +41,15 @@ Java.perform (function () {
 }
 );
 
+/* https://github.com/iddoeldor/frida-snippets */
+/*
+Java.perform(() => {
+	var Location = Java.use('android.location.Location');
+	Location.getLatitude.implementation = function() {
+		return 59.3251172;
+	}
+	Location.getLongitude.implementation = function() {
+		return 18.0710935;
+	}
+})
+*/
