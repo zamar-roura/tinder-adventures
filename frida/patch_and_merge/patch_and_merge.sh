@@ -228,7 +228,7 @@ apktool b merged/ -o merged.apk -f --use-aapt2 \
 	&& apksigner sign --ks store.jks --ks-pass pass:123456 merged_aligned.apk \
 	&& mv merged_aligned.apk "$OUT_APK" -v
 
-#rm -rf "$TEMP_DIR"
+rm -rf "$TEMP_DIR"
 
 printf "\n[%s] ############## ALL DONE ##############\n" "$LOGNAME"
 printf "[%s] You can find here your apk ready to be installed: %s\n" "$LOGNAME" "$OUT_APK"
