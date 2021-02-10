@@ -182,6 +182,30 @@ mv merged_yaml merged/apktool.yml
 
 # Again, to modify the manifest, I should probably use a proper XML parser or something...
 sed -i -E 's/android:isSplitRequired="true"/android:isSplitRequired="false"/g' merged/AndroidManifest.xml
+sed -i -E 's/android:extractNativeLibs="false"/android:extractNativeLibs="true"/g' merged/AndroidManifest.xml
+
+# We have to fix now all resources tha apktool didn't know how to resolve
+grep -Ri -E 'APKTOOL_DUMMY_[^"]+" id="' merged/ | while read match
+do
+	# Matches look like this:
+	# merged/res/values/public.xml:    <public type="drawable" name="APKTOOL_DUMMY_749" id="0x7f080749" />
+	path="$(printf "%s" "$match" | cut -d: -f1)"
+
+	dummy="$(printf "%s" "$match" | grep -oE 'APKTOOL_DUMMY_[^"]+')"
+
+	id="$(printf "%s" "$match" | grep -oE 'id="0x[^"]+"')"
+
+	# Extract the real resource's name
+	name="$(grep -R --exclude-dir=merged/ -e "$id" . \
+		| sed -E 's/^.+name="//g' \
+		| sed -E 's/".+$//g')"
+
+	# Substitute "APKTOOL_DUMMY" for the correct name
+	sed -i "s/name=\"$dummy\" $id/name=\"$name\" $id/" "$path"
+
+done
+
+### THIS LAST PART (patching the entry point) IS REQUIRED AND APP-DEPENDANT:
 
 # Patch LoginActivity.smali to inject our gadget on startup
 file_to_patch="$(find . -type f -name "LoginActivity.smali")"
