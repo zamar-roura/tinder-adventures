@@ -124,7 +124,8 @@ fi
 # This is the actual start of the script itself
 
 LOGNAME="$(basename "$0")"
-TEMP_DIR="$(mktemp -d)"
+#TEMP_DIR="$(mktemp -d)"
+TEMP_DIR="build" ; rm -rf "$TEMP_DIR" ; mkdir "$TEMP_DIR"
 printf "Using '%s' as temp dir\n" "$TEMP_DIR"
 
 printf "\n[%s] ############## DECOMPILING ALL COMPONENTS ################\n\n" "$LOGNAME"
@@ -184,6 +185,19 @@ mv merged_yaml merged/apktool.yml
 sed -i -E 's/android:isSplitRequired="true"/android:isSplitRequired="false"/g' merged/AndroidManifest.xml
 sed -i -E 's/android:extractNativeLibs="false"/android:extractNativeLibs="true"/g' merged/AndroidManifest.xml
 
+# Dummy values that are not references (not '@...', nor 'id="..."' can be removed
+for dir in merged/res/values*
+do
+	test -w "$dir/drawables.xml" && sed -i -E 's#<drawable name="APKTOOL_DUMMY_[0-9a-f]+" />##' "$dir/drawables.xml"
+	test -w "$dir/dimens.xml"    && sed -i -E 's#<dimen name="APKTOOL_DUMMY_[0-9a-f]+" />##' "$dir/dimens.xml"
+	test -w "$dir/styles.xml"    && sed -i -E 's#<style name="APKTOOL_DUMMY_[0-9a-f]+" />##' "$dir/styles.xml"
+	test -w "$dir/strings.xml"   && sed -i -E 's#<string name="APKTOOL_DUMMY_[0-9a-f]+" />##' "$dir/strings.xml"
+	test -w "$dir/arrays.xml"    && sed -i -E 's#<array name="APKTOOL_DUMMY_[0-9a-f]+" />##' "$dir/arrays.xml"
+	test -w "$dir/plurals.xml"   && sed -i -E 's#<plurals name="APKTOOL_DUMMY_[0-9a-f]+" />##' "$dir/plurals.xml"
+done
+
+printf "\n[%s] ############## FIXING RESOURCE IDs (this might take a while....) ##############\n\n" "$LOGNAME"
+
 # We have to fix now all resources tha apktool didn't know how to resolve
 grep -Ri -E 'APKTOOL_DUMMY_[^"]+" id="' merged/ | while read match
 do
@@ -203,6 +217,99 @@ do
 	# Substitute "APKTOOL_DUMMY" for the correct name
 	sed -i "s/name=\"$dummy\" $id/name=\"$name\" $id/" "$path"
 
+	# There are still some missing values after this, which were not directly addressed
+	# by their id.
+	#
+	# APKTOOL_DUMMY_<NNNN> may refer to different types of resources (drawable, style...)
+	# depending if it's '@drawable/APKTOOL_DUMMY_<NNNN>', '@style/...', etc.
+	# The format of ids are as follows:
+	#	PPTTNNNN
+	#    ^ ^   ^
+	#    | |  Arbitrary ID (set by aapt at build-time)
+	#    | Resource type (arbitrarily set by aapt at build-time)
+	#    Package (always 0x7f)
+	#
+	# For example, here '01' means 'anim' and 'abc_fade_in' is the first resource, so it
+	# would be replaced for 'APKTOOL_DUMMY_0':
+	# $ aapt2 dump resources merged_aligned.apk | head
+	# Binary APK
+	# Package name=com.tinder id=7f
+	#  type anim id=01 entryCount=98
+	#    resource 0x7f010000 anim/abc_fade_in PUBLIC
+	# (...)
+	#
+	# https://stackoverflow.com/a/6646113
+	#
+	# Therefore, to locate the remaining resources, we have to note their type
+	# ('@<whatever>'), look-up that ID for the given type on res/values/public.xml, and
+	# replace @<type>/APKTOOL_DUMMY_<ID> for @<type>/<name on public.xml>
+
+	# First step: locate all occurrences of this particular '@<type>/$dummy'
+	grep -R -E "/$dummy" merged/res/ | while read ref_match
+	do
+		# Again, the format is as follows:
+		# merged/res/drawable/vpi__tab_indicator.xml:    <item (...) android:drawable="@drawable/APKTOOL_DUMMY_749" />
+		# From there, we want to extract the affected file, the category and the ID
+		ref_file="$(printf "%s" "$ref_match" | cut -d: -f 1)"
+
+		# Sometimes there are multiple instances of the same type on the same line
+		# (for example: height and width). To account for those cases, we just get the
+		# first occurrence. I use 'sort -u' for that, so when there are different types I
+		# still get the `sed` error later:
+		#	sed: -e expression #1, char <...>: unterminated `s' command
+		ref_type="$(printf "%s" "$ref_match" \
+				| grep -oE "@[a-z]+/$dummy" \
+				| sed -E 's#^@##' \
+				| sed -E "s#/$dummy\$##" \
+				| sort -u)"
+
+		ref_id="$(printf "%s" "$dummy" | sed -E 's/APKTOOL_DUMMY_//')"
+		# We also have to append as many 0's to fill the format (4 numbers)
+		ref_id="$(printf "%04x" "0x$ref_id")"
+
+		ref_name="$(grep -E "type=\"$ref_type\" .+ id=\"0x7f[0-9a-f]{2}$ref_id\"" */res/values/public.xml \
+			| grep -E 'name="[^"]+"' -o \
+			| sort -u \
+			| sed -E 's/^name="//' \
+			| sed -E 's/"$//')"
+
+		# Finally, we can replace the item with its proper name
+		sed -i "s#@$ref_type/$dummy#@$ref_type/$ref_name#g" "$ref_file"
+	done
+done
+
+# The only elements missing should be the ones who had no ID (hence, not captured by the
+# first grep on the outer loop before)
+grep -Ri -E 'APKTOOL_DUMMY_[^"]+"' merged/ | while read match
+do
+	dummy="$(printf "%s" "$match" | grep -oE 'APKTOOL_DUMMY_[^"]+')"
+
+	# This is the same loop as before. We duplicate it now because it's better to reuse
+	# the big list of dummy values from before, instead of redoing it again
+	#
+	# This should, obviously, be a function. But, once more, idgaf and I'm too lazy even
+	# for that
+	grep -R -E "/$dummy" merged/res/ | while read ref_match
+	do
+		ref_file="$(printf "%s" "$ref_match" | cut -d: -f 1)"
+		ref_type="$(printf "%s" "$ref_match" \
+				| grep -oE "@[a-z]+/$dummy" \
+				| sed -E 's#^@##' \
+				| sed -E "s#/$dummy\$##" \
+				| sort -u)"
+
+		ref_id="$(printf "%s" "$dummy" | sed -E 's/APKTOOL_DUMMY_//')"
+		ref_id="$(printf "%04x" "0x$ref_id")"
+
+		ref_name="$(grep -E "type=\"$ref_type\" .+ id=\"0x7f[0-9a-f]{2}$ref_id\"" */res/values/public.xml \
+			| grep -E 'name="[^"]+"' -o \
+			| grep -v "name=\"$dummy\"" \
+			| sort -u \
+			| sed -E 's/^name="//' \
+			| sed -E 's/"$//')"
+
+		sed -i "s#@$ref_type/$dummy#@$ref_type/$ref_name#g" "$ref_file"
+	done
 done
 
 ### THIS LAST PART (patching the entry point) IS REQUIRED AND APP-DEPENDANT:
